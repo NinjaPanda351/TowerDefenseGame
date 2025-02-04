@@ -13,8 +13,8 @@ class Tower {
         } else {
             let target = this.findTarget();
             if (target) {
-                target.health -= 10;
-                console.log(`Tower at (${this.x}, ${this.y}) hit an enemy!`);
+                const projectile = new Projectile(this.x, this.y, target);
+                gameEngine.addEntity(projectile);
                 this.fireCooldown = this.fireRate;
             }
         }
@@ -38,6 +38,6 @@ class Tower {
 
     draw(ctx) {
         ctx.fillStyle = "blue";
-        ctx.fillRect(this.x - 16, this.y - 16, 32, 32); // ✅ Tower size
+        ctx.fillRect(this.x - 16, this.y - 16, 32, 32);
     }
 }
