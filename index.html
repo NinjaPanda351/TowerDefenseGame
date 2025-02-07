@@ -85,7 +85,6 @@
             display: flex;
         }
 
-
         #upgrade-menu button {
             width: 100%;
             padding: 5px;
@@ -95,6 +94,33 @@
 
         #upgrade-menu button:hover {
             background-color: lightgray;
+        }
+
+        /* Wave Controls */
+        #wave-controls {
+            margin-top: 10px;
+            padding: 10px;
+            background: #444;
+            color: white;
+            border: 2px solid white;
+        }
+
+        #start-wave {
+            padding: 8px 12px;
+            font-size: 16px;
+            cursor: pointer;
+            background: green;
+            color: white;
+            border: none;
+        }
+
+        #start-wave:hover {
+            background: darkgreen;
+        }
+
+        #start-wave:disabled {
+            background: gray;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -125,6 +151,11 @@
     <button id="sell-tower">Sell Tower</button>
 </div>
 
+<!-- Wave Controls -->
+<div id="wave-controls">
+    <button id="start-wave">Start Wave</button>
+    <p>Wave: <span id="wave-number">1</span></p>
+</div>
 
 <!-- Scripts moved to the bottom to ensure they run after the DOM is fully loaded -->
 <script type="text/javascript" src="./assetmanager.js"></script>
@@ -135,6 +166,7 @@
 <script type="text/javascript" src="./enemy.js"></script>
 <script type="text/javascript" src="./tower.js"></script>
 <script type="text/javascript" src="./projectile.js"></script>
+<script type="text/javascript" src="./wavemanager.js"></script>
 <script type="text/javascript" src="./gamemanager.js"></script>
 <script type="text/javascript" src="./economy.js"></script>
 <script type="text/javascript" src="./main.js"></script>

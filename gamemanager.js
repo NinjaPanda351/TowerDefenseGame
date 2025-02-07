@@ -2,12 +2,9 @@ class GameManager {
     constructor(gameEngine, levelData, enemyWaypoints) {
         this.gameEngine = gameEngine;
         this.levelData = levelData;
-        this.enemyWaypoints = enemyWaypoints;
-        this.selectedTowerType = "basic";
-        this.enemySpawnTimer = 0;
-        this.enemySpawnInterval = 120;
 
         this.economy = new Economy();
+        this.waveManager = new WaveManager(enemyWaypoints, this.economy);
 
         this.towerCosts = {
             "basic": 50,
@@ -16,6 +13,7 @@ class GameManager {
             "bomb": 125
         }
 
+        this.selectedTowerType = "basic";
         this.selectedTower = null;
 
         window.onload = () => this.initUI();
@@ -31,6 +29,8 @@ class GameManager {
                 e.target.style.background = "lightblue";
             });
         });
+
+        document.getElementById("start-wave").addEventListener("click", () => this.waveManager.startWave());
 
         document.getElementById("gameWorld").addEventListener("click", (e) => this.handleClick(e));
         document.getElementById("upgrade-damage").addEventListener("click", () => this.upgradeTower("damage"));
@@ -222,16 +222,7 @@ class GameManager {
         this.selectedTower = null;
     }
 
-    spawnEnemy() {
-        const enemy = new Enemy(this.enemyWaypoints, this.economy);
-        this.gameEngine.addEntity(enemy);
-    }
-
     update() {
-        if (this.enemySpawnTimer >= this.enemySpawnInterval) {
-            this.spawnEnemy();
-            this.enemySpawnTimer = 0;
-        }
-        this.enemySpawnTimer++;
+        this.waveManager.update();
     }
 }
