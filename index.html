@@ -17,6 +17,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            gap: 20px; /* Moved from second style block */
         }
 
         h1 {
@@ -28,7 +29,30 @@
             border: 3px solid #000;
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
         }
+
+        #tower-menu {
+            width: 150px;
+            padding: 10px;
+            background: #ddd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid black;
+        }
+
+        .tower-btn {
+            width: 100%;
+            padding: 10px;
+            margin: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .tower-btn:hover {
+            background-color: lightgray;
+        }
     </style>
+
     <script type="text/javascript" src="./assetmanager.js"></script>
     <script type="text/javascript" src="./timer.js"></script>
     <script type="text/javascript" src="./gameengine.js"></script>
@@ -37,11 +61,19 @@
     <script type="text/javascript" src="./enemy.js"></script>
     <script type="text/javascript" src="./tower.js"></script>
     <script type="text/javascript" src="./projectile.js"></script>
+    <script type="text/javascript" src="./gamemanager.js"></script>
     <script type="text/javascript" src="./main.js"></script>
 
 </head>
 <body>
 <h1>My Tower Defense Game</h1>
 <canvas id="gameWorld" width="640" height="512" tabindex="0" autofocus></canvas>
+<div id="tower-menu">
+    <h3>Select a Tower</h3>
+    <button class="tower-btn" data-type="basic">Basic Tower</button>
+    <button class="tower-btn" data-type="sniper">Sniper Tower</button>
+    <button class="tower-btn" data-type="rapid">Rapid Tower</button>
+    <button class="tower-btn" data-type="bomb">Bomb Tower</button>
+</div>
 </body>
 </html>
