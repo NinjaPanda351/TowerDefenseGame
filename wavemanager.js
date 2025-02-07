@@ -19,14 +19,37 @@ class WaveManager {
         this.waveActive = true;
         this.enemiesSpawned = 0;
         this.spawnTimer = 0;
-        this.updateUI();
 
+        // Every 5 waves, enemies get a 10% HP boost
+        if (this.currentWave % 5 === 0) {
+            Enemy.globalHealthMultiplier *= 1.1;
+            console.log(`Enemies are getting stronger! Health increased by 10%!`);
+        }
+
+        this.updateUI();
         console.log(`Wave ${this.currentWave} started!`);
     }
 
+
     spawnEnemy() {
-        const enemy = new Enemy(this.enemyWaypoints, this.economy);
+        const enemyTypes = ["basic", "fast", "tank", "regenerating", "armored"];
+
+        // Decide enemy types based on the wave number
+        let possibleEnemies;
+        if (this.currentWave < 3) {
+            possibleEnemies = ["basic", "fast"];
+        } else if (this.currentWave < 6) {
+            possibleEnemies = ["basic", "fast", "tank"];
+        } else if (this.currentWave < 9) {
+            possibleEnemies = ["fast", "tank", "regenerating"];
+        } else {
+            possibleEnemies = enemyTypes; // Unlock all types after wave 9
+        }
+
+        const randomType = possibleEnemies[Math.floor(Math.random() * possibleEnemies.length)];
+        const enemy = new Enemy(this.enemyWaypoints, randomType, this.economy);
         gameEngine.addEntity(enemy);
+
         this.enemiesSpawned++;
     }
 
@@ -55,7 +78,20 @@ class WaveManager {
     }
 
     updateUI() {
-        document.getElementById("wave-number").innerText = this.currentWave;
-        document.getElementById("start-wave").disabled = this.waveActive;
+        setTimeout(() => {
+            const waveElement = document.getElementById("wave-number");
+            if (waveElement) {
+                waveElement.innerText = this.currentWave;
+            } else {
+                console.error("ERROR: Could not find #wave-number in the DOM!");
+            }
+
+            const startWaveBtn = document.getElementById("start-wave");
+            if (startWaveBtn) {
+                startWaveBtn.disabled = this.waveActive;
+            } else {
+                console.error("ERROR: Could not find #start-wave button in the DOM!");
+            }
+        }, 0); // Delay ensures the DOM is loaded
     }
 }

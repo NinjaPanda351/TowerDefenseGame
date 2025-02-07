@@ -40,6 +40,15 @@ class GameManager {
         document.getElementById("sell-tower").addEventListener("click", () => this.sellTower());
     }
 
+    getMouseTile() {
+        if (!this.gameEngine.mouse) return null;
+
+        let tileX = Math.floor(this.gameEngine.mouse.x / 64) * 64;
+        let tileY = Math.floor(this.gameEngine.mouse.y / 64) * 64;
+
+        return {x: tileX, y: tileY};
+    }
+
     handleClick(event) {
         const canvas = document.getElementById("gameWorld");
         const rect = canvas.getBoundingClientRect();
@@ -223,6 +232,9 @@ class GameManager {
     }
 
     update() {
+        this.getMouseTile()
         this.waveManager.update();
     }
+
+
 }

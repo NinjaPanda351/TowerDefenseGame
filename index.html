@@ -6,33 +6,46 @@
     <title>My Tower Defense Game</title>
 
     <style>
+        /* Overall Page Layout */
         body {
-            text-align: center;
             background-color: #2c3e50;
             color: white;
             font-family: Arial, sans-serif;
             margin: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
+        }
+
+        /* Container to align game canvas and sidebar */
+        #game-container {
+            display: flex;
             gap: 20px;
+            align-items: flex-start;
         }
 
-        h1 {
-            margin-bottom: 10px;
-        }
-
-        canvas {
+        /* Game Canvas */
+        #gameWorld {
             background: #ecf0f1;
             border: 3px solid #000;
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
         }
 
+        /* Sidebar Layout */
+        #sidebar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 200px;
+            padding: 15px;
+            background: #34495e;
+            border: 2px solid white;
+        }
+
         /* Tower Selection Menu */
         #tower-menu {
-            width: 150px;
+            width: 100%;
             padding: 10px;
             background: #ddd;
             display: flex;
@@ -60,10 +73,10 @@
             background: #222;
             color: white;
             padding: 10px;
-            width: 150px;
+            width: 100%;
             text-align: center;
-            margin-bottom: 10px;
             border: 2px solid white;
+            margin-top: 10px;
         }
 
         /* Upgrade Menu */
@@ -72,6 +85,7 @@
             width: 180px;
             padding: 10px;
             background: #ddd;
+            display: none;
             flex-direction: column;
             align-items: center;
             border: 2px solid black;
@@ -98,15 +112,16 @@
 
         /* Wave Controls */
         #wave-controls {
-            margin-top: 10px;
+            margin-top: 20px;
             padding: 10px;
             background: #444;
             color: white;
             border: 2px solid white;
+            text-align: center;
         }
 
         #start-wave {
-            padding: 8px 12px;
+            padding: 10px;
             font-size: 16px;
             cursor: pointer;
             background: green;
@@ -125,20 +140,33 @@
     </style>
 </head>
 <body>
-<h1>My Tower Defense Game</h1>
-<canvas id="gameWorld" width="640" height="512" tabindex="0" autofocus></canvas>
 
-<!-- Tower Selection Menu -->
-<div id="tower-menu">
-    <h3>Select a Tower</h3>
-    <button class="tower-btn" data-type="basic">Basic Tower</button>
-    <button class="tower-btn" data-type="sniper">Sniper Tower</button>
-    <button class="tower-btn" data-type="rapid">Rapid Tower</button>
-    <button class="tower-btn" data-type="bomb">Bomb Tower</button>
+<!-- Container for game canvas and sidebar -->
+<div id="game-container">
+    <!-- Game Canvas -->
+    <canvas id="gameWorld" width="640" height="512" tabindex="0" autofocus></canvas>
+
+    <!-- Sidebar for UI -->
+    <div id="sidebar">
+        <!-- Tower Selection Menu -->
+        <div id="tower-menu">
+            <h3>Select a Tower</h3>
+            <button class="tower-btn" data-type="basic">Basic Tower</button>
+            <button class="tower-btn" data-type="sniper">Sniper Tower</button>
+            <button class="tower-btn" data-type="rapid">Rapid Tower</button>
+            <button class="tower-btn" data-type="bomb">Bomb Tower</button>
+        </div>
+
+        <!-- Money Display -->
+        <div id="money-display">Money: $200</div>
+
+        <!-- Wave Controls -->
+        <div id="wave-controls">
+            <button id="start-wave">Start Wave</button>
+            <p>Wave: <span id="wave-number">1</span></p>
+        </div>
+    </div>
 </div>
-
-<!-- Money Display -->
-<div id="money-display">Money: $200</div>
 
 <!-- Upgrade Menu -->
 <div id="upgrade-menu" class="hidden">
@@ -151,11 +179,7 @@
     <button id="sell-tower">Sell Tower</button>
 </div>
 
-<!-- Wave Controls -->
-<div id="wave-controls">
-    <button id="start-wave">Start Wave</button>
-    <p>Wave: <span id="wave-number">1</span></p>
-</div>
+
 
 <!-- Scripts moved to the bottom to ensure they run after the DOM is fully loaded -->
 <script type="text/javascript" src="./assetmanager.js"></script>
@@ -170,5 +194,6 @@
 <script type="text/javascript" src="./gamemanager.js"></script>
 <script type="text/javascript" src="./economy.js"></script>
 <script type="text/javascript" src="./main.js"></script>
+
 </body>
 </html>
