@@ -17,7 +17,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            gap: 20px; /* Moved from second style block */
+            gap: 20px;
         }
 
         h1 {
@@ -30,6 +30,7 @@
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
         }
 
+        /* Tower Selection Menu */
         #tower-menu {
             width: 150px;
             padding: 10px;
@@ -51,23 +52,57 @@
         .tower-btn:hover {
             background-color: lightgray;
         }
+
+        /* Money Display */
+        #money-display {
+            font-size: 20px;
+            font-weight: bold;
+            background: #222;
+            color: white;
+            padding: 10px;
+            width: 150px;
+            text-align: center;
+            margin-bottom: 10px;
+            border: 2px solid white;
+        }
+
+        /* Upgrade Menu */
+        #upgrade-menu {
+            position: absolute;
+            width: 180px;
+            padding: 10px;
+            background: #ddd;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid black;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: flex;
+        }
+
+
+        #upgrade-menu button {
+            width: 100%;
+            padding: 5px;
+            margin: 3px;
+            cursor: pointer;
+        }
+
+        #upgrade-menu button:hover {
+            background-color: lightgray;
+        }
     </style>
-
-    <script type="text/javascript" src="./assetmanager.js"></script>
-    <script type="text/javascript" src="./timer.js"></script>
-    <script type="text/javascript" src="./gameengine.js"></script>
-    <script type="text/javascript" src="./util.js"></script>
-    <script type="text/javascript" src="./map.js"></script>
-    <script type="text/javascript" src="./enemy.js"></script>
-    <script type="text/javascript" src="./tower.js"></script>
-    <script type="text/javascript" src="./projectile.js"></script>
-    <script type="text/javascript" src="./gamemanager.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-
 </head>
 <body>
 <h1>My Tower Defense Game</h1>
 <canvas id="gameWorld" width="640" height="512" tabindex="0" autofocus></canvas>
+
+<!-- Tower Selection Menu -->
 <div id="tower-menu">
     <h3>Select a Tower</h3>
     <button class="tower-btn" data-type="basic">Basic Tower</button>
@@ -75,5 +110,33 @@
     <button class="tower-btn" data-type="rapid">Rapid Tower</button>
     <button class="tower-btn" data-type="bomb">Bomb Tower</button>
 </div>
+
+<!-- Money Display -->
+<div id="money-display">Money: $200</div>
+
+<!-- Upgrade Menu -->
+<div id="upgrade-menu" class="hidden">
+    <h3>Upgrade Tower</h3>
+    <p id="upgrade-cost">Cost: $50</p>
+    <button id="upgrade-damage">Damage: 10 (+5)</button>
+    <button id="upgrade-fireRate">Fire Rate: 60 (-5)</button>
+    <button id="upgrade-range">Range: 150 (+20)</button>
+    <button id="toggle-targeting">Target: Nearest</button>
+    <button id="sell-tower">Sell Tower</button>
+</div>
+
+
+<!-- Scripts moved to the bottom to ensure they run after the DOM is fully loaded -->
+<script type="text/javascript" src="./assetmanager.js"></script>
+<script type="text/javascript" src="./timer.js"></script>
+<script type="text/javascript" src="./gameengine.js"></script>
+<script type="text/javascript" src="./util.js"></script>
+<script type="text/javascript" src="./map.js"></script>
+<script type="text/javascript" src="./enemy.js"></script>
+<script type="text/javascript" src="./tower.js"></script>
+<script type="text/javascript" src="./projectile.js"></script>
+<script type="text/javascript" src="./gamemanager.js"></script>
+<script type="text/javascript" src="./economy.js"></script>
+<script type="text/javascript" src="./main.js"></script>
 </body>
 </html>

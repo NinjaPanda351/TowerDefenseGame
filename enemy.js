@@ -1,6 +1,7 @@
 class Enemy {
-    constructor(waypoints) {
+    constructor(waypoints, economy) {
         this.waypoints = waypoints;
+        this.economy = economy;
         this.index = 0;
 
         // Start at the first waypoint
@@ -15,12 +16,15 @@ class Enemy {
 
         this.speed = 2;
         this.health = 100;
+        this.reward = 10;
+        this.distanceTraveled = 0;
         this.removeFromWorld = false;
     }
 
     update() {
         if (this.health <= 0) {
             console.log("enemy defeated");
+            this.economy.earn(this.reward);
             this.removeFromWorld = true;
             return;
         }
@@ -34,6 +38,7 @@ class Enemy {
             if (distance > this.speed) {
                 this.x += (dx / distance) * this.speed;
                 this.y += (dy / distance) * this.speed;
+                this.distanceTraveled += this.speed;
             } else {
                 this.index++; // Move to the next waypoint
             }
