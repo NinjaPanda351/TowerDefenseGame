@@ -41,9 +41,9 @@ class Tower {
         document.getElementById("toggle-targeting").innerText = `Target: ${this.targetingMode}`;
     }
 
-    update() {
+    update(deltaTime) {
         if (this.fireCooldown > 0) {
-            this.fireCooldown--;
+            this.fireCooldown -= deltaTime * 60;
         } else {
             let target = this.findTarget();
             if (target) {

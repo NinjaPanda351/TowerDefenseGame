@@ -85,17 +85,21 @@
             width: 180px;
             padding: 10px;
             background: #ddd;
-            display: none;
+            display: none; /* Default to hidden */
             flex-direction: column;
             align-items: center;
             border: 2px solid black;
+            transition: opacity 0.3s ease-in-out;
         }
 
         .hidden {
-            display: none;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .visible {
+            opacity: 1;
+            pointer-events: auto;
             display: flex;
         }
 
@@ -136,6 +140,22 @@
         #start-wave:disabled {
             background: gray;
             cursor: not-allowed;
+        }
+
+        #speed-controls {
+            margin-top: 10px;
+            padding: 10px;
+            background: #222;
+            color: white;
+            border: 2px solid white;
+            text-align: center;
+        }
+
+        #speed-controls button {
+            padding: 5px 10px;
+            margin: 3px;
+            cursor: pointer;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -179,17 +199,27 @@
     <button id="sell-tower">Sell Tower</button>
 </div>
 
-
+<!-- Speed Controls -->
+<div id="speed-controls">
+    <button id="speed-pause">Pause</button>
+    <button id="speed-normal">1x</button>
+    <button id="speed-fast">2x</button>
+    <button id="speed-turbo">3x</button>
+    <p id="speed-display">Speed: Normal</p>
+</div>
 
 <!-- Scripts moved to the bottom to ensure they run after the DOM is fully loaded -->
 <script type="text/javascript" src="./assetmanager.js"></script>
 <script type="text/javascript" src="./timer.js"></script>
+<script type="text/javascript" src="./speedmanager.js"></script>
 <script type="text/javascript" src="./gameengine.js"></script>
+<script type="text/javascript" src="./damagenumber.js"></script>
 <script type="text/javascript" src="./util.js"></script>
 <script type="text/javascript" src="./map.js"></script>
 <script type="text/javascript" src="./enemy.js"></script>
 <script type="text/javascript" src="./tower.js"></script>
 <script type="text/javascript" src="./projectile.js"></script>
+<script type="text/javascript" src="./bombprojectile.js"></script>
 <script type="text/javascript" src="./wavemanager.js"></script>
 <script type="text/javascript" src="./gamemanager.js"></script>
 <script type="text/javascript" src="./economy.js"></script>

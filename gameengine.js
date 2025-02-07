@@ -19,6 +19,8 @@ class GameEngine {
         this.options = options || {
             debugging: false,
         };
+
+        this.speedManager = new SpeedManager();
     };
 
     init(ctx) {
@@ -30,7 +32,9 @@ class GameEngine {
     start() {
         this.running = true;
         const gameLoop = () => {
-            this.loop();
+            if (this.speedManager.getSpeedMultiplier() > 0) {
+                this.loop();
+            }
             requestAnimFrame(gameLoop, this.ctx.canvas);
         };
         gameLoop();
@@ -97,23 +101,24 @@ class GameEngine {
         }
     }
 
-
     update() {
-        let entitiesCount = this.entities.length;
+        let deltaTime = this.timer.tick() * this.speedManager.getSpeedMultiplier();
+        if (deltaTime > 0.1) deltaTime = 0.1;  //Prevent large jumps on lag spikes
 
-        for (let i = 0; i < entitiesCount; i++) {
+        for (let i = 0; i < this.entities.length; i++) {
             let entity = this.entities[i];
 
             if (!entity.removeFromWorld) {
-                entity.update();
+                if (typeof entity.update === "function") {
+                    entity.update(deltaTime);
+                }
             }
         }
 
         this.entities = this.entities.filter(entity => !entity.removeFromWorld);
-    };
+    }
 
     loop() {
-        this.clockTick = this.timer.tick();
         this.update();
         this.draw();
     };

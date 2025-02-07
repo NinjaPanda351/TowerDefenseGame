@@ -1,6 +1,7 @@
 class GameManager {
     constructor(gameEngine, levelData, enemyWaypoints) {
         this.gameEngine = gameEngine;
+        this.speedManager = gameEngine.speedManager;
         this.levelData = levelData;
 
         this.economy = new Economy();
@@ -38,6 +39,12 @@ class GameManager {
         document.getElementById("upgrade-range").addEventListener("click", () => this.upgradeTower("range"));
         document.getElementById("toggle-targeting").addEventListener("click", () => this.toggleTargeting());
         document.getElementById("sell-tower").addEventListener("click", () => this.sellTower());
+
+        document.getElementById("speed-pause").addEventListener("click", () => this.speedManager.setSpeed("Paused"));
+        document.getElementById("speed-normal").addEventListener("click", () => this.speedManager.setSpeed("Normal"));
+        document.getElementById("speed-fast").addEventListener("click", () => this.speedManager.setSpeed("Fast"));
+        document.getElementById("speed-turbo").addEventListener("click", () => this.speedManager.setSpeed("Turbo"));
+
     }
 
     getMouseTile() {
@@ -126,11 +133,12 @@ class GameManager {
             return;
         }
 
-        menu.classList.remove("hidden");
+        menu.style.display = "flex";
         menu.classList.add("visible");
+        menu.classList.remove("hidden");
 
-        let posX = tileX + 70;
-        let posY = tileY - 20;
+        let posX = tileX + 64;
+        let posY = tileY - 32;
 
         if (posX + menu.offsetWidth > window.innerWidth) {
             posX = tileX - menu.offsetWidth - 10;
@@ -164,8 +172,10 @@ class GameManager {
     hideUpgradeMenu() {
         const menu = document.getElementById("upgrade-menu");
         if (menu) {
+            menu.style.display = "none";
             menu.classList.add("hidden");
             menu.classList.remove("visible");
+            this.selectedTower = null;
             console.log("Upgrade menu hidden.");
         } else {
             console.error("ERROR: Upgrade menu not found.");

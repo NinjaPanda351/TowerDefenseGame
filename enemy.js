@@ -4,11 +4,11 @@ class Enemy {
         this.economy = economy;
 
         const enemyStats = {
-            "basic": { speed: 1.5, health: 100, reward: 10 },
-            "fast": { speed: 3.0, health: 50, reward: 8 },
-            "tank": { speed: 0.75, health: 300, reward: 20 },
-            "regenerating": { speed: 1.2, health: 150, reward: 15 },
-            "armored": { speed: 1.0, health: 200, reward: 18 }
+            "basic": { speed: 113, health: 100, reward: 10 },
+            "fast": { speed: 225, health: 50, reward: 8 },
+            "tank": { speed: 57, health: 300, reward: 20 },
+            "regenerating": { speed: 90, health: 150, reward: 15 },
+            "armored": { speed: 75, health: 200, reward: 18 }
         };
 
         const stats = enemyStats[type] || enemyStats["basic"];
@@ -25,29 +25,31 @@ class Enemy {
         this.removeFromWorld = false;
     }
 
-    update() {
+    update(deltaTime) {
         if (this.health <= 0) {
             this.economy.earn(this.reward);
             this.removeFromWorld = true;
+            return;
         }
 
-        if (this.currentWaypoint < this.waypoints.length - 1) {
-            let nextWaypoint = this.waypoints[this.currentWaypoint + 1];
-
-            let dx = nextWaypoint.x - this.x;
-            let dy = nextWaypoint.y - this.y;
+        if (this.currentWaypoint < this.waypoints.length) {
+            let target = this.waypoints[this.currentWaypoint];
+            let dx = target.x - this.x;
+            let dy = target.y - this.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance < this.speed) {
+            let adjustedSpeed = this.speed * deltaTime; // Scale speed
+
+            if (distance < adjustedSpeed) {
+                this.x = target.x;
+                this.y = target.y;
                 this.currentWaypoint++;
-                this.x = nextWaypoint.x;
-                this.y = nextWaypoint.y;
             } else {
-                this.x += (dx / distance) * this.speed;
-                this.y += (dy / distance) * this.speed;
+                this.x += (dx / distance) * adjustedSpeed;
+                this.y += (dy / distance) * adjustedSpeed;
             }
         } else {
-            this.removeFromWorld = true;
+            this.removeFromWorld = true; // Enemy reaches end
         }
     }
 
@@ -67,5 +69,9 @@ class Enemy {
             case "armored": return "darkblue";
             default: return "black"; // Basic enemy
         }
+    }
+
+    takeDamage(damage) {
+        this.health -= damage;
     }
 }
