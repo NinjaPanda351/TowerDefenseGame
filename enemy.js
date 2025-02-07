@@ -1,5 +1,5 @@
 class Enemy {
-    constructor(waypoints, type = "basic", economy) {
+    constructor(waypoints, type = "basic", economy, buffs = { healthMultiplier: 1, speedMultiplier: 1, rewardMultiplier: 1}) {
         this.waypoints = waypoints;
         this.economy = economy;
 
@@ -13,9 +13,9 @@ class Enemy {
 
         const stats = enemyStats[type] || enemyStats["basic"];
         this.type = type;
-        this.speed = stats.speed;
-        this.health = stats.health;
-        this.reward = stats.reward;
+        this.speed = stats.speed * buffs.speedMultiplier;
+        this.health = stats.health * buffs.healthMultiplier;
+        this.reward = stats.reward * buffs.rewardMultiplier;
 
         this.currentWaypoint = 0;
         this.x = this.waypoints[0].x;

@@ -10,6 +10,8 @@ class WaveManager {
         this.enemiesSpawned = 0;
         this.waveActive = false;
 
+        this.globalEnemyBuffs = { healthMultiplier: 1, speedMultiplier: 1, rewardMultiplier: 1};
+
         this.updateUI();
     }
 
@@ -21,15 +23,36 @@ class WaveManager {
         this.spawnTimer = 0;
 
         // Every 5 waves, enemies get a 10% HP boost
-        if (this.currentWave % 5 === 0) {
-            Enemy.globalHealthMultiplier *= 1.1;
-            console.log(`Enemies are getting stronger! Health increased by 10%!`);
+        if (this.currentWave % 5 === 0 && this.currentWave % 10 !== 0) {
+            this.applyEnemyBuffs();
         }
 
+        if (this.currentWave % 10 === 0) {
+            this.spawnBossWave();
+            return;
+        }
+
+        this.waveActive = true;
+        this.enemiesSpawned = 0;
+        this.spawnTimer = 0;
         this.updateUI();
         console.log(`Wave ${this.currentWave} started!`);
     }
 
+    applyEnemyBuffs() {
+        this.globalEnemyBuffs.healthMultiplier *= 1.2; // increase health by 20%
+        this.globalEnemyBuffs.speedMultiplier *= 1.1; //increase speed by 10%
+        this.globalEnemyBuffs.rewardMultiplier *= 1.2; //increase reward by 20%
+    }
+
+    spawnBossWave() {
+        this.waveActive = true;
+        this.enemiesSpawned = 0;
+        this.spawnTimer = 0;
+
+        const boss = new BossEnemy(this.enemyWaypoints, this.economy, this.currentWave);
+        gameEngine.addEntity(boss);
+    }
 
     spawnEnemy() {
         const enemyTypes = ["basic", "fast", "tank", "regenerating", "armored"];
@@ -47,7 +70,7 @@ class WaveManager {
         }
 
         const randomType = possibleEnemies[Math.floor(Math.random() * possibleEnemies.length)];
-        const enemy = new Enemy(this.enemyWaypoints, randomType, this.economy);
+        const enemy = new Enemy(this.enemyWaypoints, randomType, this.economy, this.globalEnemyBuffs);
         gameEngine.addEntity(enemy);
 
         this.enemiesSpawned++;
@@ -66,15 +89,19 @@ class WaveManager {
             // Check if all enemies are gone before enabling the next wave button
             const activeEnemies = gameEngine.entities.filter(e => e instanceof Enemy);
             if (activeEnemies.length === 0) {
-                this.waveActive = false;
-                this.enemiesSpawned = 0; // Reset enemy count
-                this.economy.earn(this.currentWave * 12 + 15); //Earn money for completing wave
-                this.currentWave++; // Increment wave
-                this.enemiesPerWave += 2; // Increase difficulty
-
-                this.updateUI();
+                this.endWave();
             }
         }
+    }
+
+    endWave() {
+        this.waveActive = false;
+        this.enemiesSpawned = 0; // Reset enemy count
+        this.economy.earn(this.currentWave * 12 + 15); //Earn money for completing wave
+        this.currentWave++; // Increment wave
+        this.enemiesPerWave += 2; // Increase difficulty
+
+        this.updateUI();
     }
 
     updateUI() {

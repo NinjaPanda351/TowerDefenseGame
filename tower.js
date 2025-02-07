@@ -98,7 +98,6 @@ class Tower {
         return bestTarget;
     }
 
-
     shootProjectile(target) {
         const projectile = new Projectile(this.x, this.y, target, this.damage);
         gameEngine.addEntity(projectile);
