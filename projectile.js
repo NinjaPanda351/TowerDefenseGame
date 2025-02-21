@@ -1,10 +1,10 @@
 class Projectile {
-    constructor(x, y, target) {
+    constructor(x, y, target, damage) {
         this.x = x;
         this.y = y;
         this.target = target;
         this.speed = 1125;
-        this.damage = 10;
+        this.damage = damage;
         this.removeFromWorld = false;
         this.projectileTargetOffset = 16;
     }

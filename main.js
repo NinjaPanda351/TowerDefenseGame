@@ -27,6 +27,9 @@ const gameManager = new GameManager(gameEngine, levelData, enemyWaypoints);
 
 const ASSET_MANAGER = new AssetManager();
 
+ASSET_MANAGER.queueDownload("resources/Environment/Grass/spr_grass_03.png");
+ASSET_MANAGER.queueDownload("resources/Environment/Grass/spr_grass_02.png");
+
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
 	canvas.width = levelData[0].length * 64;

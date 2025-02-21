@@ -114,6 +114,41 @@
             background-color: lightgray;
         }
 
+        /* Evolution Menu */
+        #evolution-menu {
+            position: absolute;
+            width: 180px;
+            padding: 10px;
+            background: #ddd;
+            display: none; /* Default to hidden */
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid black;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .visible {
+            opacity: 1;
+            pointer-events: auto;
+            display: flex;
+        }
+
+        #evolution-menu button {
+            width: 100%;
+            padding: 5px;
+            margin: 3px;
+            cursor: pointer;
+        }
+
+        #evolution-menu button:hover {
+            background-color: lightgray;
+        }
+
         /* Wave Controls */
         #wave-controls {
             margin-top: 20px;
@@ -191,12 +226,21 @@
 <!-- Upgrade Menu -->
 <div id="upgrade-menu" class="hidden">
     <h3>Upgrade Tower</h3>
+    <h4 id="tower-type"> Tower</h4>
     <p id="upgrade-cost">Cost: $50</p>
     <button id="upgrade-damage">Damage: 10 (+5)</button>
     <button id="upgrade-fireRate">Fire Rate: 60 (-5)</button>
     <button id="upgrade-range">Range: 150 (+20)</button>
     <button id="toggle-targeting">Target: Nearest</button>
     <button id="sell-tower">Sell Tower</button>
+</div>
+
+<!-- Evolution Menu -->
+<div id="evolution-menu" class="hidden">
+    <h3>Evolve Tower</h3>
+    <p id="evolution-cost">Cost: 200</p>
+    <button id="evolution-one">Evolve To </button>
+    <button id="evolution-two">Evolve To </button>
 </div>
 
 <!-- Speed Controls -->
@@ -219,6 +263,7 @@
 <script type="text/javascript" src="./enemy.js"></script>
 <script type="text/javascript" src="./bossenemy.js"></script>
 <script type="text/javascript" src="./tower.js"></script>
+<script type="text/javascript" src="./towerfactory.js"></script>
 <script type="text/javascript" src="./projectile.js"></script>
 <script type="text/javascript" src="./bombprojectile.js"></script>
 <script type="text/javascript" src="./wavemanager.js"></script>

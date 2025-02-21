@@ -4,8 +4,11 @@ class GameManager {
         this.speedManager = gameEngine.speedManager;
         this.levelData = levelData;
 
-        this.economy = new Economy();
+        this.economy = new Economy(100000);
         this.waveManager = new WaveManager(enemyWaypoints, this.economy);
+
+        this.upgradeMenuOffsetX = 64;
+        this.upgradeMenuOffsetY = 144;
 
         this.towerCosts = {
             "basic": 50,
@@ -15,6 +18,7 @@ class GameManager {
         }
 
         this.selectedTowerType = "basic";
+        this.selectedEvoType = null;
         this.selectedTower = null;
 
         window.onload = () => this.initUI();
@@ -40,6 +44,56 @@ class GameManager {
         document.getElementById("toggle-targeting").addEventListener("click", () => this.toggleTargeting());
         document.getElementById("sell-tower").addEventListener("click", () => this.sellTower());
 
+        document.getElementById("evolution-one").addEventListener("click", () => {
+            if (!this.selectedTower) return;
+
+            switch (this.selectedTower.type) {
+                case "basic":
+                    this.selectedEvoType = "flamethrower";
+                    break;
+                case "sniper":
+                    this.selectedEvoType = "marksmen";
+                    break;
+                case "rapid":
+                    this.selectedEvoType = "minigun";
+                    break;
+                case "bomb":
+                    this.selectedEvoType = "nuke";
+                    break;
+                default:
+                    console.error("Unknown tower type for evolution!");
+                    return;
+            }
+
+            this.evolveTower();
+            this.selectedEvoType = null;
+        });
+
+        document.getElementById("evolution-two").addEventListener("click", () => {
+            if (!this.selectedTower) return;
+
+            switch (this.selectedTower.type) {
+                case "basic":
+                    this.selectedEvoType = "ice";
+                    break;
+                case "sniper":
+                    this.selectedEvoType = "railgun";
+                    break;
+                case "rapid":
+                    this.selectedEvoType = "scatter";
+                    break;
+                case "bomb":
+                    this.selectedEvoType = "cluster";
+                    break;
+                default:
+                    console.error("Unknown tower type for evolution!");
+                    return;
+            }
+
+            this.evolveTower();
+            this.selectedEvoType = null;
+        });
+
         document.getElementById("speed-pause").addEventListener("click", () => this.speedManager.setSpeed("Paused"));
         document.getElementById("speed-normal").addEventListener("click", () => this.speedManager.setSpeed("Normal"));
         document.getElementById("speed-fast").addEventListener("click", () => this.speedManager.setSpeed("Fast"));
@@ -59,7 +113,9 @@ class GameManager {
     handleClick(event) {
         const canvas = document.getElementById("gameWorld");
         const rect = canvas.getBoundingClientRect();
-        const menu = document.getElementById("upgrade-menu");
+        const upgradeMenu = document.getElementById("upgrade-menu");
+        const evolutionMenu = document.getElementById("evolution-menu");
+
 
         let mouseX = event.clientX - rect.left;
         let mouseY = event.clientY - rect.top;
@@ -70,15 +126,18 @@ class GameManager {
         console.log(`Grid Position: (${tileX}, ${tileY})`);
 
         // Check if clicking on the upgrade menu
-        let menuRect = menu.getBoundingClientRect();
-        if (
-            event.clientX >= menuRect.left &&
-            event.clientX <= menuRect.right &&
-            event.clientY >= menuRect.top &&
-            event.clientY <= menuRect.bottom
-        ) {
-            console.log("Clicked inside the upgrade menu. Ignoring click.");
-            return;
+        const isInsideMenu = (menu) => {
+            const menuRect = menu.getBoundingClientRect();
+            return (
+                event.clientX >= menuRect.left &&
+                event.clientX <= menuRect.right &&
+                event.clientY >= menuRect.top &&
+                event.clientY <= menuRect.bottom
+            );
+        };
+
+        if (isInsideMenu(upgradeMenu) || isInsideMenu(evolutionMenu)) {
+            return; // Ignore click
         }
 
         let clickedTower = this.gameEngine.entities.find(entity =>
@@ -89,25 +148,37 @@ class GameManager {
 
         if (clickedTower) {
             console.log("Tower clicked:", clickedTower);
+            document.getElementById("tower-type").innerText = clickedTower.type + " Tower";
 
             if (this.selectedTower === clickedTower) {
                 console.log("Clicking the same tower. Closing upgrade menu.");
-                this.hideUpgradeMenu();
+                this.hideMenu("upgrade-menu");
+                this.hideMenu("evolution-menu");
                 this.selectedTower = null;
                 return;
             }
 
             console.log("Tower selected for upgrade.");
             this.selectedTower = clickedTower;
-            this.showUpgradeMenu(tileX, tileY);
+            document.getElementById("upgrade-cost").innerText = "Upgrade Cost: " + (50 + this.selectedTower.upgradeCostModifier);
+
+            if (this.selectedTower.level === 6) {
+                this.showMenu(this.selectedTower.x, this.selectedTower.y, "evolution-menu");
+            } else {
+                this.showMenu(this.selectedTower.x, this.selectedTower.y, "upgrade-menu");
+            }
             return;
         }
 
         // If menu was open, close it and prevent placing a tower
-        if (!menu.classList.contains("hidden")) {
+        if (!upgradeMenu.classList.contains("hidden")) {
             console.log("Clicked outside tower. Closing upgrade menu.");
-            this.hideUpgradeMenu();
+            this.hideMenu("upgrade-menu");
             return;
+        }
+
+        if (!evolutionMenu.classList.contains("hidden")) {
+            this.hideMenu("evolution-menu");
         }
 
         // No tower detected, check if tile is buildable
@@ -123,10 +194,14 @@ class GameManager {
         }
     }
 
-    showUpgradeMenu(tileX, tileY) {
+    showMenu(tileX, tileY, menuId) {
+        if (!this.selectedTower) {
+            console.error("No tower selected for menu display");
+            return;
+        }
         console.log("Tower Stats:", this.selectedTower); // Check selected tower
 
-        const menu = document.getElementById("upgrade-menu");
+        const menu = document.getElementById(menuId);
 
         if (!menu || !this.selectedTower) {
             console.error("ERROR: Upgrade menu or selected tower not found!");
@@ -137,8 +212,8 @@ class GameManager {
         menu.classList.add("visible");
         menu.classList.remove("hidden");
 
-        let posX = tileX + 64;
-        let posY = tileY - 32;
+        let posX = tileX + this.upgradeMenuOffsetX;
+        let posY = tileY + this.upgradeMenuOffsetY;
 
         if (posX + menu.offsetWidth > window.innerWidth) {
             posX = tileX - menu.offsetWidth - 10;
@@ -151,6 +226,14 @@ class GameManager {
         menu.style.left = `${posX}px`;
         menu.style.top = `${posY}px`;
 
+        if (menuId === "upgrade-menu") {
+            this.showUpgradeMenu();
+        } else if (menuId === "evolution-menu") {
+            this.showEvolutionMenu();
+        }
+    }
+
+    showUpgradeMenu() {
         // Check if UI elements exist before modifying them
         const dmgElement = document.getElementById("upgrade-damage");
         const fireRateElement = document.getElementById("upgrade-fireRate");
@@ -165,18 +248,47 @@ class GameManager {
         } else {
             console.error("ERROR: One or more UI elements not found in the DOM.");
         }
-
-        console.log("Upgrade menu should now be visible at:", posX, posY);
     }
 
-    hideUpgradeMenu() {
-        const menu = document.getElementById("upgrade-menu");
+    showEvolutionMenu() {
+        const evolutionOne = document.getElementById("evolution-one");
+        const evolutionTwo = document.getElementById("evolution-two");
+
+        if (!this.selectedTower) { return; }
+
+        switch (this.selectedTower.type) {
+            case "basic":
+                evolutionOne.innerText = "Evolve to Flamethrower";
+                evolutionTwo.innerText = "Evolve to Ice Tower";
+                break;
+            case "sniper":
+                evolutionOne.innerText = "Evolve to Marksmen Tower";
+                evolutionTwo.innerrText = "Evolve to Railgun Tower";
+                break;
+            case "rapid":
+                evolutionOne.innerText = "Evolve to Minigun Tower";
+                evolutionTwo.innerText = "Evolve to Scatter Tower";
+                break;
+            case "bomb":
+                evolutionOne.innerText = "Evolve to Nuke Tower";
+                evolutionTwo.innerText = "Evolve to Cluster Tower";
+                break;
+            default:
+                console.error("Unknown tower type for evolution.");
+                return;
+        }
+    }
+
+    hideMenu(menuId, preserveSelection = false) {
+        const menu = document.getElementById(menuId);
         if (menu) {
             menu.style.display = "none";
             menu.classList.add("hidden");
             menu.classList.remove("visible");
-            this.selectedTower = null;
-            console.log("Upgrade menu hidden.");
+
+            if (!preserveSelection) {
+                this.selectedTower = null;
+            }
         } else {
             console.error("ERROR: Upgrade menu not found.");
         }
@@ -185,12 +297,56 @@ class GameManager {
     upgradeTower(stat) {
         if (!this.selectedTower) return;
 
-        const upgradeCost = 50;
+        const upgradeCost = 50 + this.selectedTower.upgradeCostModifier;
+        document.getElementById("upgrade-cost").innerText = "Upgrade Cost: " + upgradeCost;
+
         if (this.economy.spend(upgradeCost)) {
             this.selectedTower.upgrade(stat);
 
             // Refresh UI after upgrade
-            this.showUpgradeMenu(this.selectedTower.x - 32, this.selectedTower.y - 32);
+            if (this.selectedTower.level === 6) {
+                this.showMenu(this.selectedTower.x, this.selectedTower.y, "evolution-menu");
+                this.hideMenu("upgrade-menu", true);
+            } else {
+                this.showMenu(this.selectedTower.x, this.selectedTower.y, "upgrade-menu");
+            }
+        } else {
+            console.log("not enough money to upgrade");
+        }
+    }
+
+    evolveTower() {
+        if (!this.selectedTower || !this.selectedEvoType) {
+            console.error("No tower selected or evolution type not set.");
+            return;
+        }
+
+        const evolutionCost = 200;
+        if (this.economy.spend(evolutionCost)) {
+            console.log(`Evolving ${this.selectedTower.type} into ${this.selectedEvoType}`);
+
+            const oldX = this.selectedTower.x;
+            const oldY = this.selectedTower.y;
+
+            // Remove old tower
+            this.gameEngine.entities = this.gameEngine.entities.filter(entity => entity !== this.selectedTower);
+
+            // Create evolved tower
+            const evoTower = TowerFactory.createTower(this.selectedEvoType, oldX, oldY);
+
+            if (evoTower) {
+                console.log(`Successfully created ${this.selectedEvoType} tower at (${oldX}, ${oldY}).`);
+                this.gameEngine.addEntity(evoTower);
+                this.selectedTower = evoTower;  // Ensure assignment here
+
+                // Hide the evolution menu and show the upgrade menu for the new tower
+                this.hideMenu("evolution-menu", true);
+                this.showMenu(oldX, oldY, "upgrade-menu");
+            } else {
+                console.error(`Failed to create evolution tower of type: ${this.selectedEvoType}`);
+            }
+        } else {
+            console.log("Not enough money for evolution.");
         }
     }
 
@@ -202,7 +358,7 @@ class GameManager {
     }
 
     placeTower(tileX, tileY) {
-        console.log(`🛠 Placing tower at (${tileX}, ${tileY})`);
+        console.log(`Placing tower at (${tileX}, ${tileY})`);
 
         // Check if tile is buildable
         if (!this.levelData[tileY / 64] || this.levelData[tileY / 64][tileX / 64] !== 0) {
@@ -219,7 +375,7 @@ class GameManager {
         }
 
         // Place tower
-        const tower = new Tower(tileX + 32, tileY + 32, this.selectedTowerType);
+        const tower = TowerFactory.createTower(this.selectedTowerType, tileX + 32, tileY + 32);
         this.gameEngine.addEntity(tower);
         console.log(`Placed ${this.selectedTowerType} Tower at (${tileX}, ${tileY})`);
     }
@@ -230,13 +386,13 @@ class GameManager {
         let baseCost = this.towerCosts[this.selectedTower.type] || 0;
         let refundAmount = Math.floor(baseCost * 0.75 + (this.selectedTower.level - 1) * 50 * 0.6);
 
-        console.log(`💰 Selling tower for $${refundAmount}`);
+        console.log(`Selling tower for $${refundAmount}`);
 
         this.economy.earn(refundAmount);
 
         this.gameEngine.entities = this.gameEngine.entities.filter(entity => entity !== this.selectedTower);
 
-        this.hideUpgradeMenu();
+        this.hideMenu("upgrade-menu");
 
         this.selectedTower = null;
     }
