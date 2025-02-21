@@ -32,9 +32,6 @@ class WaveManager {
             return;
         }
 
-        this.waveActive = true;
-        this.enemiesSpawned = 0;
-        this.spawnTimer = 0;
         this.updateUI();
         console.log(`Wave ${this.currentWave} started!`);
     }
@@ -55,25 +52,26 @@ class WaveManager {
     }
 
     spawnEnemy() {
-        const enemyTypes = ["basic", "fast", "tank", "regenerating", "armored"];
+        const waveEnemyPool = this.getEnemyPool();
 
-        // Decide enemy types based on the wave number
-        let possibleEnemies;
-        if (this.currentWave < 3) {
-            possibleEnemies = ["basic", "fast"];
-        } else if (this.currentWave < 6) {
-            possibleEnemies = ["basic", "fast", "tank"];
-        } else if (this.currentWave < 9) {
-            possibleEnemies = ["fast", "tank", "regenerating"];
-        } else {
-            possibleEnemies = enemyTypes; // Unlock all types after wave 9
-        }
-
-        const randomType = possibleEnemies[Math.floor(Math.random() * possibleEnemies.length)];
+        const randomType = waveEnemyPool[Math.floor(Math.random() * waveEnemyPool.length)];
         const enemy = new Enemy(this.enemyWaypoints, randomType, this.economy, this.globalEnemyBuffs);
         gameEngine.addEntity(enemy);
 
         this.enemiesSpawned++;
+    }
+
+    getEnemyPool() {
+        // Dynamic enemy pool based on the wave
+        if (this.currentWave < 3) {
+            return ["normal_slime", "bat", "goblin"];
+        } else if (this.currentWave < 6) {
+            return ["normal_slime", "bat", "goblin", "skeleton"];
+        } else if (this.currentWave < 9) {
+            return ["bat", "goblin", "skeleton", "ghost", "big_slime"];
+        } else {
+            return ["bat", "goblin", "skeleton", "ghost", "big_slime", "demon", "zombie"];
+        }
     }
 
     update() {

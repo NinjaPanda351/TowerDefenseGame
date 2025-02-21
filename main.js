@@ -34,7 +34,7 @@ const SPRITE_MAP = {
 	BIG_SLIME: "resources/Enemies/spr_big_slime.png",
 	DEMON: "resources/Enemies/spr_demon.png",
 	GHOST: "resources/Enemies/spr_ghost.png",
-	GOBLIN: "resources/Enemies/spr_ghost.png",
+	GOBLIN: "resources/Enemies/spr_goblin.png",
 	KING_SLIME: "resources/Enemies/spr_king_slime.png",
 	NORMAL_SLIME: "resources/Enemies/spr_normal_slime.png",
 	SKELETON: "resources/Enemies/spr_skeleton.png",
