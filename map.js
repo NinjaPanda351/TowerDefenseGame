@@ -9,9 +9,9 @@ class Map {
             for (let x = 0; x < this.grid[y].length; x++) {
                 let groundImage;
                 if (this.grid[y][x] === 1) {
-                    groundImage =  ASSET_MANAGER.getAsset("resources/Environment/Grass/spr_grass_03.png"); // Path
+                    groundImage =  ASSET_MANAGER.getAsset(SPRITE_MAP.GROUND); // Path
                 } else {
-                    groundImage = ASSET_MANAGER.getAsset("resources/Environment/Grass/spr_grass_02.png"); // Buildable Area
+                    groundImage = ASSET_MANAGER.getAsset(SPRITE_MAP.GRASS); // Buildable Area
                 }
 
                 ctx.drawImage(groundImage, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);

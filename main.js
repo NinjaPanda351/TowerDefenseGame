@@ -27,8 +27,23 @@ const gameManager = new GameManager(gameEngine, levelData, enemyWaypoints);
 
 const ASSET_MANAGER = new AssetManager();
 
-ASSET_MANAGER.queueDownload("resources/Environment/Grass/spr_grass_03.png");
-ASSET_MANAGER.queueDownload("resources/Environment/Grass/spr_grass_02.png");
+const SPRITE_MAP = {
+	GRASS: "resources/Environment/Grass/spr_grass_02.png",
+	GROUND: "resources/Environment/Grass/spr_grass_03.png",
+	BAT: "resources/Enemies/spr_bat.png",
+	BIG_SLIME: "resources/Enemies/spr_big_slime.png",
+	DEMON: "resources/Enemies/spr_demon.png",
+	GHOST: "resources/Enemies/spr_ghost.png",
+	GOBLIN: "resources/Enemies/spr_ghost.png",
+	KING_SLIME: "resources/Enemies/spr_king_slime.png",
+	NORMAL_SLIME: "resources/Enemies/spr_normal_slime.png",
+	SKELETON: "resources/Enemies/spr_skeleton.png",
+	ZOMBIE: "resources/Enemies/spr_zombie.png"
+};
+
+Object.keys(SPRITE_MAP).forEach(key => {
+	ASSET_MANAGER.queueDownload(SPRITE_MAP[key]);
+});
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");
