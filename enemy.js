@@ -20,6 +20,7 @@ class Enemy {
         this.speed = stats.speed * buffs.speedMultiplier;
         this.health = stats.health * buffs.healthMultiplier;
         this.reward = stats.reward * buffs.rewardMultiplier;
+        this.maxHealth = stats.health * buffs.healthMultiplier;
         this.sprite = stats.sprite;
 
         this.currentWaypoint = 0;
@@ -75,7 +76,7 @@ class Enemy {
 
         // Health bar
         ctx.fillStyle = "red";
-        ctx.fillRect(this.x, this.y - 10, 40, 5);
+        ctx.fillRect(this.x, this.y - 10, (this.maxHealth / 100) * 40, 5);
         ctx.fillStyle = "green";
         ctx.fillRect(this.x, this.y - 10, (this.health / 100) * 40, 5);
     }

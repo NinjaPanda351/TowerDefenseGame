@@ -7,6 +7,8 @@ class Animator {
     }
 
     drawFrame(tick, ctx, x, y, scale) {
+        ctx.imageSmoothingEnabled = false;
+
         this.elaspedTime += tick;
 
         if (this.isDone()) {
