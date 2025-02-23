@@ -45,30 +45,29 @@ Object.keys(SPRITE_MAP).forEach(key => {
 	ASSET_MANAGER.queueDownload(SPRITE_MAP[key]);
 });
 
-ASSET_MANAGER.downloadAll(() => {
-	const canvas = document.getElementById("gameWorld");
-	canvas.width = levelData[0].length * 64;
-	canvas.height = levelData.length * 64;
-	const ctx = canvas.getContext("2d");
-
-	const gameMap = new Map(levelData);
-	gameEngine.addEntity(gameMap);
-
-	const originalUpdate = gameEngine.update.bind(gameEngine);
-	gameEngine.update = function () {
-		originalUpdate();
-		gameManager.update();
-	};
-
-	gameEngine.init(ctx);
-	gameEngine.start();
-});
-
 // Start Game Function
 function startGame() {
 	document.getElementById("start-menu").classList.add("hidden");
 	document.getElementById("game-container").style.display = "flex";
-	gameEngine.start();
+
+	ASSET_MANAGER.downloadAll(() => {
+		const canvas = document.getElementById("gameWorld");
+		canvas.width = levelData[0].length * 64;
+		canvas.height = levelData.length * 64;
+		const ctx = canvas.getContext("2d");
+
+		const gameMap = new Map(levelData);
+		gameEngine.addEntity(gameMap);
+
+		const originalUpdate = gameEngine.update.bind(gameEngine);
+		gameEngine.update = function () {
+			originalUpdate();
+			gameManager.update();
+		};
+
+		gameEngine.init(ctx);
+		gameEngine.start();
+	});
 }
 
 // Show Instructions
@@ -83,7 +82,7 @@ function hideInstructions() {
 	document.getElementById("start-menu").classList.remove("hidden");
 }
 
-// Exit Game
+// Exit Game (for now, just hides the menu)
 function exitGame() {
 	if (confirm("Are you sure you want to exit?")) {
 		window.close();

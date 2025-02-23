@@ -42,7 +42,6 @@ class GameEngine {
 
     stop() {
         this.running = false;
-
     }
 
     startInput() {
