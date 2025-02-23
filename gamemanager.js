@@ -5,7 +5,7 @@ class GameManager {
         this.levelData = levelData;
 
         this.economy = new Economy(250);
-        this.waveManager = new WaveManager(enemyWaypoints, this.economy);
+        this.waveManager = new WaveManager(enemyWaypoints, this.economy, this);
 
         this.upgradeMenuOffsetX = 64;
         this.upgradeMenuOffsetY = 144;
@@ -20,6 +20,9 @@ class GameManager {
         this.selectedTowerType = null;
         this.selectedEvoType = null;
         this.selectedTower = null;
+
+        this.lives = 20;
+        this.updateLifeUI();
 
         window.onload = () => this.initUI();
     }
@@ -101,6 +104,31 @@ class GameManager {
 
     }
 
+    updateLifeUI() {
+        const lifeElement = document.getElementById("life-count");
+        if (lifeElement) {
+            lifeElement.innerText = this.lives;
+        }
+    }
+
+    loseLife() {
+        this.lives--;
+        this.updateLifeUI();
+
+        if (this.lives <= 0) {
+            this.endGame();
+        }
+    }
+
+    endGame() {
+        this.gameEngine.stop();
+        document.getElementById("game-over-screen").style.display = "flex";
+    }
+
+    restartGame() {
+        window.location.reload();
+    }
+
     getMouseTile() {
         if (!this.gameEngine.mouse) return null;
 
@@ -148,7 +176,7 @@ class GameManager {
 
         if (clickedTower) {
             console.log("Tower clicked:", clickedTower);
-            document.getElementById("tower-type").innerText = clickedTower.type + " Tower";
+            document.getElementById("tower-type").innerText = String(clickedTower.type[0]).toUpperCase() + String(clickedTower.type).slice(1) + " Tower";
 
             if (this.selectedTower === clickedTower) {
                 console.log("Clicking the same tower. Closing upgrade menu.");
@@ -360,8 +388,11 @@ class GameManager {
     placeTower(tileX, tileY) {
         console.log(`Placing tower at (${tileX}, ${tileY})`);
 
+        const TILE_ROW = tileY / 64;
+        const TILE_COL = tileX / 64;
+
         // Check if tile is buildable
-        if (!this.levelData[tileY / 64] || this.levelData[tileY / 64][tileX / 64] !== 0) {
+        if (!this.levelData || !this.levelData[TILE_ROW] || this.levelData[TILE_ROW][TILE_COL] !== 0) {
             console.log("Can't place tower here! This tile is not buildable.");
             return;
         }
@@ -401,6 +432,19 @@ class GameManager {
         this.getMouseTile()
         this.waveManager.update();
     }
+}
 
+// Function to close the specified menu
+function closeMenu(menuId) {
+    const menu = document.getElementById(menuId);
+    if (menu) {
+        menu.style.display = "none";
+        menu.classList.add("hidden");
+        menu.classList.remove("visible");
 
+        // Reset selected tower if upgrade menu is closed
+        if (menuId === "upgrade-menu" || menuId === "evolution-menu") {
+            gameManager.selectedTower = null;
+        }
+    }
 }

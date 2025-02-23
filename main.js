@@ -63,3 +63,29 @@ ASSET_MANAGER.downloadAll(() => {
 	gameEngine.init(ctx);
 	gameEngine.start();
 });
+
+// Start Game Function
+function startGame() {
+	document.getElementById("start-menu").classList.add("hidden");
+	document.getElementById("game-container").style.display = "flex";
+	gameEngine.start();
+}
+
+// Show Instructions
+function showInstructions() {
+	document.getElementById("start-menu").classList.add("hidden");
+	document.getElementById("instructions-modal").classList.remove("hidden");
+}
+
+// Hide Instructions and return to Start Menu
+function hideInstructions() {
+	document.getElementById("instructions-modal").classList.add("hidden");
+	document.getElementById("start-menu").classList.remove("hidden");
+}
+
+// Exit Game
+function exitGame() {
+	if (confirm("Are you sure you want to exit?")) {
+		window.close();
+	}
+}

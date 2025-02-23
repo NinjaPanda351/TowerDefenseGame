@@ -3,22 +3,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Tower Defense Game</title>
+    <title>Tower Defense Game</title>
 
     <style>
-        /* Overall Page Layout */
+        /* General Layout */
         body {
-            background-color: #2c3e50;
+            background-color: #1e1e2f;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
 
-        /* Container to align game canvas and sidebar */
+        /* Main Container */
         #game-container {
             display: flex;
             gap: 20px;
@@ -27,149 +28,86 @@
 
         /* Game Canvas */
         #gameWorld {
-            background: #ecf0f1;
-            border: 3px solid #000;
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+            background: #222233;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
         }
 
-        /* Sidebar Layout */
+        /* Sidebar */
         #sidebar {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 200px;
-            padding: 15px;
-            background: #34495e;
-            border: 2px solid white;
+            width: 220px;
+            padding: 20px;
+            background: #2c2c3d;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
         }
 
-        /* Tower Selection Menu */
+        /* Tower Menu */
         #tower-menu {
             width: 100%;
             padding: 10px;
-            background: #ddd;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 2px solid black;
+            background: #393952;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         .tower-btn {
             width: 100%;
             padding: 10px;
-            margin: 5px;
+            margin: 5px 0;
             font-size: 14px;
             cursor: pointer;
+            background: #4e4e70;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         .tower-btn:hover {
-            background-color: lightgray;
+            background-color: #6a6a9d;
+            transform: translateY(-2px);
         }
 
         /* Money Display */
         #money-display {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
-            background: #222;
-            color: white;
-            padding: 10px;
+            background: #44445e;
+            padding: 10px 0;
             width: 100%;
             text-align: center;
-            border: 2px solid white;
-            margin-top: 10px;
-        }
-
-        /* Upgrade Menu */
-        #upgrade-menu {
-            position: absolute;
-            width: 180px;
-            padding: 10px;
-            background: #ddd;
-            display: none; /* Default to hidden */
-            flex-direction: column;
-            align-items: center;
-            border: 2px solid black;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .visible {
-            opacity: 1;
-            pointer-events: auto;
-            display: flex;
-        }
-
-        #upgrade-menu button {
-            width: 100%;
-            padding: 5px;
-            margin: 3px;
-            cursor: pointer;
-        }
-
-        #upgrade-menu button:hover {
-            background-color: lightgray;
-        }
-
-        /* Evolution Menu */
-        #evolution-menu {
-            position: absolute;
-            width: 180px;
-            padding: 10px;
-            background: #ddd;
-            display: none; /* Default to hidden */
-            flex-direction: column;
-            align-items: center;
-            border: 2px solid black;
-            transition: opacity 0.3s ease-in-out;
-        }
-
-        .hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .visible {
-            opacity: 1;
-            pointer-events: auto;
-            display: flex;
-        }
-
-        #evolution-menu button {
-            width: 100%;
-            padding: 5px;
-            margin: 3px;
-            cursor: pointer;
-        }
-
-        #evolution-menu button:hover {
-            background-color: lightgray;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
 
         /* Wave Controls */
         #wave-controls {
-            margin-top: 20px;
             padding: 10px;
-            background: #444;
-            color: white;
-            border: 2px solid white;
+            background: #393952;
+            border-radius: 10px;
+            margin-top: 10px;
             text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         #start-wave {
-            padding: 10px;
+            padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-            background: green;
+            background: #3baf3b;
             color: white;
             border: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
 
         #start-wave:hover {
-            background: darkgreen;
+            background: #47d147;
         }
 
         #start-wave:disabled {
@@ -177,39 +115,187 @@
             cursor: not-allowed;
         }
 
-        #speed-controls {
-            margin-top: 10px;
-            padding: 10px;
-            background: #222;
+        /* Upgrade Menu */
+        .menu {
+            position: absolute;
+            width: 220px;
+            padding: 15px;
+            background: #2d2d40;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .menu button {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            background-color: #4e4e70;
             color: white;
-            border: 2px solid white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .menu button:hover {
+            background-color: #6a6a9d;
+        }
+
+        /* Menu Header with Close Button */
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        /* Close Button Style */
+        .close-btn {
+            font-size: 18px;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #ff5555;
+        }
+        /* Speed Controls */
+        #speed-controls {
+            padding: 10px;
+            background: #393952;
+            border-radius: 10px;
             text-align: center;
+            margin-top: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         }
 
         #speed-controls button {
-            padding: 5px 10px;
-            margin: 3px;
+            padding: 8px 12px;
+            margin: 5px;
             cursor: pointer;
-            font-size: 14px;
+            background-color: #4e4e70;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
         }
+
+        #speed-controls button:hover {
+            background-color: #6a6a9d;
+        }
+
+        /* UI Elements */
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+
+        /* Game Over Screen */
+        #game-over-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        #game-over-screen h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        #game-over-screen button {
+            padding: 12px 24px;
+            font-size: 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #game-over-screen button:hover {
+            background-color: #ff6b61;
+            transform: translateY(-2px);
+        }
+
+        /* Start Menu and Modal Styling */
+        .menu-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .menu-screen h1, .menu-screen h2 {
+            margin-bottom: 20px;
+        }
+
+        .menu-screen button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .menu-screen button:hover {
+            background: #2ecc71;
+        }
+
+        .hidden {
+            display: none;
+        }
+
     </style>
 </head>
 <body>
 
-<!-- Container for game canvas and sidebar -->
+<!-- Main Game Container -->
 <div id="game-container">
     <!-- Game Canvas -->
     <canvas id="gameWorld" width="640" height="512" tabindex="0" autofocus></canvas>
 
-    <!-- Sidebar for UI -->
+    <!-- Sidebar -->
     <div id="sidebar">
-        <!-- Tower Selection Menu -->
+        <!-- Tower Selection -->
         <div id="tower-menu">
-            <h3>Select a Tower</h3>
-            <button class="tower-btn" data-type="basic">Basic Tower</button>
-            <button class="tower-btn" data-type="sniper">Sniper Tower</button>
-            <button class="tower-btn" data-type="rapid">Rapid Tower</button>
-            <button class="tower-btn" data-type="bomb">Bomb Tower</button>
+            <h2 style="color: white;">Towers</h2>
+            <button class="tower-btn" data-type="basic">Basic Tower - $50</button>
+            <button class="tower-btn" data-type="sniper">Sniper Tower - $100</button>
+            <button class="tower-btn" data-type="rapid">Rapid Tower - $75</button>
+            <button class="tower-btn" data-type="bomb">Bomb Tower - $125</button>
         </div>
 
         <!-- Money Display -->
@@ -217,41 +303,80 @@
 
         <!-- Wave Controls -->
         <div id="wave-controls">
-            <button id="start-wave">Start Wave</button>
+            <button id="start-wave"> Wave</button>
             <p>Wave: <span id="wave-number">1</span></p>
+        </div>
+
+        <!-- Speed Controls -->
+        <div id="speed-controls">
+            <button id="speed-pause">⏸Pause</button>
+            <button id="speed-normal">▶1x</button>
+            <button id="speed-fast">2x</button>
+            <button id="speed-turbo">⚡ 3x</button>
+            <p id="speed-display">Speed: Normal</p>
         </div>
     </div>
 </div>
 
 <!-- Upgrade Menu -->
-<div id="upgrade-menu" class="hidden">
-    <h3>Upgrade Tower</h3>
-    <h4 id="tower-type"> Tower</h4>
+<div id="upgrade-menu" class="menu">
+    <div class="menu-header">
+        <span class="close-btn" onclick="closeMenu('upgrade-menu')">✖</span>
+    </div>
+
+    <h3>🔧 Upgrade Tower</h3>
+    <h4 id="tower-type">Basic Tower</h4>
     <p id="upgrade-cost">Cost: $50</p>
-    <button id="upgrade-damage">Damage: 10 (+5)</button>
-    <button id="upgrade-fireRate">Fire Rate: 60 (-5)</button>
-    <button id="upgrade-range">Range: 150 (+20)</button>
+    <button id="upgrade-damage">Damage +5</button>
+    <button id="upgrade-fireRate">⚔Fire Rate -5</button>
+    <button id="upgrade-range">Range +20</button>
     <button id="toggle-targeting">Target: Nearest</button>
     <button id="sell-tower">Sell Tower</button>
 </div>
 
 <!-- Evolution Menu -->
-<div id="evolution-menu" class="hidden">
+<div id="evolution-menu" class="menu">
+    <div class="menu-header">
+        <span class="close-btn" onclick="closeMenu('upgrade-menu')">✖</span>
+    </div>
     <h3>Evolve Tower</h3>
-    <p id="evolution-cost">Cost: 200</p>
-    <button id="evolution-one">Evolve To </button>
-    <button id="evolution-two">Evolve To </button>
+    <p id="evolution-cost">Cost: $200</p>
+    <button id="evolution-one">Evolution 1</button>
+    <button id="evolution-two">❄Evolution 2</button>
 </div>
 
-<!-- Speed Controls -->
-<div id="speed-controls">
-    <button id="speed-pause">Pause</button>
-    <button id="speed-normal">1x</button>
-    <button id="speed-fast">2x</button>
-    <button id="speed-turbo">3x</button>
-    <p id="speed-display">Speed: Normal</p>
+<!-- UI Display -->
+<div id="ui">
+    <p>💖 Lives: <span id="life-count">20</span></p>
 </div>
 
+<!-- Start Menu -->
+<div id="start-menu" class="menu-screen">
+    <h1>🛡Tower Defense</h1>
+    <button onclick="startGame()">Start Game</button>
+    <button onclick="showInstructions()">Instructions</button>
+    <button onclick="exitGame()">Exit</button>
+</div>
+
+<!-- Instructions Modal -->
+<div id="instructions-modal" class="menu-screen hidden">
+    <h2>How to Play</h2>
+    <p>Build towers to stop the enemies from reaching the end of the path.</p>
+    <p>Earn money for defeating enemies and use it to upgrade your defenses.</p>
+    <p>Once buildings have upgraded 5 times, they can evolve!</p>
+    <p>Use speed controls to fast-forward waves or pause the game.</p>
+    <p>Click on a tower to upgrade, sell, or change its targeting mode.</p>
+    <button onclick="hideInstructions()">Back</button>
+</div>
+
+
+<!-- Game Over Screen -->
+<div id="game-over-screen">
+    <h1>Game Over!</h1>
+    <button onclick="gameManager.restartGame()">Restart Game</button>
+</div>
+
+<!-- Scripts -->
 <!-- Scripts moved to the bottom to ensure they run after the DOM is fully loaded -->
 <script type="text/javascript" src="./assetmanager.js"></script>
 <script type="text/javascript" src="./timer.js"></script>

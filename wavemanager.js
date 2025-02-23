@@ -1,7 +1,8 @@
 class WaveManager {
-    constructor(enemyWaypoints, economy) {
+    constructor(enemyWaypoints, economy, gameManager) {
         this.enemyWaypoints = enemyWaypoints;
         this.economy = economy;
+        this.gameManager = gameManager;
 
         this.currentWave = 1;
         this.enemiesPerWave = 5;
@@ -55,7 +56,7 @@ class WaveManager {
         const waveEnemyPool = this.getEnemyPool();
 
         const randomType = waveEnemyPool[Math.floor(Math.random() * waveEnemyPool.length)];
-        const enemy = new Enemy(this.enemyWaypoints, randomType, this.economy, this.globalEnemyBuffs);
+        const enemy = new Enemy(this.enemyWaypoints, randomType, this.economy, this.globalEnemyBuffs, this.gameManager);
         gameEngine.addEntity(enemy);
 
         this.enemiesSpawned++;

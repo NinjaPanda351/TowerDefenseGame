@@ -1,10 +1,10 @@
 class Map {
     constructor(grid) {
         this.grid = grid;
-        this.tileSize = 64;
     }
 
     draw(ctx) {
+        const TILE_SIZE = 64;
         for (let y = 0; y < this.grid.length; y++) {
             for (let x = 0; x < this.grid[y].length; x++) {
                 let groundImage;
@@ -14,10 +14,10 @@ class Map {
                     groundImage = ASSET_MANAGER.getAsset(SPRITE_MAP.GRASS); // Buildable Area
                 }
 
-                ctx.drawImage(groundImage, x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+                ctx.drawImage(groundImage, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
                 ctx.strokeStyle = "black";
-                ctx.strokeRect(x * this.tileSize, y * this.tileSize, this.tileSize, this.tileSize);
+                ctx.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             }
         }
     }

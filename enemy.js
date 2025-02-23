@@ -1,7 +1,8 @@
 class Enemy {
-    constructor(waypoints, type, economy, buffs = { healthMultiplier: 1, speedMultiplier: 1, rewardMultiplier: 1 }) {
+    constructor(waypoints, type, economy, buffs = { healthMultiplier: 1, speedMultiplier: 1, rewardMultiplier: 1 }, gameManager) {
         this.waypoints = waypoints;
         this.economy = economy;
+        this.gameManager = gameManager;
 
         const enemyStats = {
             "bat": { speed: 150, health: 80, reward: 10, sprite: SPRITE_MAP.BAT, frameCount: 4, frameWidth: 10 },
@@ -62,6 +63,7 @@ class Enemy {
                 this.y += (dy / distance) * adjustedSpeed;
             }
         } else {
+            this.gameManager.loseLife();
             this.removeFromWorld = true;
         }
     }
