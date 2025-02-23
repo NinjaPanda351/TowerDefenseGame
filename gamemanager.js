@@ -4,7 +4,7 @@ class GameManager {
         this.speedManager = gameEngine.speedManager;
         this.levelData = levelData;
 
-        this.economy = new Economy(100000);
+        this.economy = new Economy(250);
         this.waveManager = new WaveManager(enemyWaypoints, this.economy, this);
 
         this.upgradeMenuOffsetX = 64;
