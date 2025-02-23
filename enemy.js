@@ -61,6 +61,7 @@ class Enemy {
             } else {
                 this.x += (dx / distance) * adjustedSpeed;
                 this.y += (dy / distance) * adjustedSpeed;
+                this.distanceTraveled += this.x + this.y;
             }
         } else {
             this.gameManager.loseLife();
