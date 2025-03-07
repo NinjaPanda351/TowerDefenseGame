@@ -5,6 +5,7 @@ class Projectile {
         this.target = target;
         this.speed = 1125;
         this.damage = damage;
+        this.pierce = false;
         this.removeFromWorld = false;
         this.projectileTargetOffset = 16;
     }

@@ -30,6 +30,7 @@ class Economy {
 
     earn(amount) {
         this.money += amount;
+        this.money = Math.floor(this.money);
         this.updateUI();
     }
 

@@ -35,7 +35,7 @@ class GameEngine {
             if (this.speedManager.getSpeedMultiplier() > 0) {
                 this.loop();
             }
-            requestAnimFrame(gameLoop, this.ctx.canvas);
+            requestAnimationFrame(gameLoop);
         };
         gameLoop();
     };
@@ -106,8 +106,9 @@ class GameEngine {
     }
 
     update() {
-        let deltaTime = this.timer.tick() * this.speedManager.getSpeedMultiplier();
-        if (deltaTime > 0.1) deltaTime = 0.1;  //Prevent large jumps on lag spikes
+        let deltaTime = this.timer.tick();
+
+        deltaTime = Math.min(deltaTime, 0.1) * this.speedManager.getSpeedMultiplier();
 
         for (let i = 0; i < this.entities.length; i++) {
             let entity = this.entities[i];
